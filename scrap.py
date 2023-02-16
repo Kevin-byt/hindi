@@ -1,21 +1,35 @@
+# Import Required Library
 import requests
 from bs4 import BeautifulSoup
-from googletrans import Translator
 
-# URL of the webpage to scrape
-url = 'https://www.medium.com/'
+# Web URL
+web_url = "https://www.geeksforgeeks.org/"
 
-# Make a GET request to the webpage
-response = requests.get(url)
-print(f'Response is {response}')
+# get HTML content
+html = requests.get(web_url).content
 
-# Parse the HTML content using BeautifulSoup
-soup = BeautifulSoup(response.content, 'html.parser')
+# parse HTML Content
+soup = BeautifulSoup(html, "html.parser")
 
-# Get the text content of the webpage
-text = soup.get_text()
-print(f'Text is {text}')
+js_files = []
+cs_files = []
 
-# Create an instance of the Translator class
-translator = Translator()
+for script in soup.find_all("script"):
+	if script.attrs.get("src"):
+		
+		# if the tag has the attribute
+		# 'src'
+		url = script.attrs.get("src")
+		js_files.append(web_url+url)
 
+
+for css in soup.find_all("link"):
+	if css.attrs.get("href"):
+		
+		# if the link tag has the 'href'
+		# attribute
+		_url = css.attrs.get("href")
+		cs_files.append(web_url+_url)
+
+print(f"Total {len(js_files)} javascript files found")
+print(f"Total {len(cs_files)} CSS files found")
