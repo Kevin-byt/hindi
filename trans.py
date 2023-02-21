@@ -1,100 +1,216 @@
-from googletrans import Translator, LANGUAGES
-import requests
-from bs4 import BeautifulSoup
-import random
+# from bs4 import BeautifulSoup
 
-# user_agents_list = [
-#     'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
-#     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.83 Safari/537.36',
-#     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36'
-#     'Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0',
-#     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
-#     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'
-# ]
+# # read in the HTML file
+# with open('page2.html', 'r') as f:
+#     html = f.read()
 
-# # URL of the webpage to scrape
-# # URL = "https://realpython.github.io/fake-jobs/"
-# URL = "https://www.classcentral.com"
-# # URL = "https://www.imdb.com/"
+# # create a BeautifulSoup object from the HTML
+# soup = BeautifulSoup(html, 'html.parser')
 
-# # Make a GET request to the webpage
-# page = requests.get(URL,headers={'User-Agent': random.choice(user_agents_list)})
-
-# # Parse the HTML content using BeautifulSoup
-# soup = BeautifulSoup(page.content, 'html.parser')
-
-# # Get the text content of the webpage
+# # extract all the text from the HTML
 # text = soup.get_text()
 
-# # Create an instance of the Translator class
+# # print the text
+# print(text)
+
+# from google.cloud import translate_v2 as translate
+# from bs4 import BeautifulSoup
+
+# # instantiate the translation client
+# client = translate.Client()
+
+# # read in the input HTML file
+# with open('input.html', 'r') as f:
+#     html = f.read()
+
+# # create a BeautifulSoup object from the HTML
+# soup = BeautifulSoup(html, 'html.parser')
+
+# # extract all the text from the HTML
+# text = soup.get_text()
+
+# # define the target language
+# target_language = 'hi'
+
+# # use the translation client to translate the text
+# result = client.translate(text, target_language=target_language)
+
+# # create a new BeautifulSoup object from the translated text
+# translated_soup = BeautifulSoup(result['translatedText'], 'html.parser')
+
+# # replace the original text with the translated text in the new BeautifulSoup object
+# for original, translated in zip(soup.strings, translated_soup.strings):
+#     original.replace_with(translated)
+
+# # write out the translated HTML file
+# with open('output.html', 'w') as f:
+#     f.write(str(soup))
+
+# from googletrans import Translator
+# from bs4 import BeautifulSoup
+
+# # Load the HTML file
+# with open('trans/page2.html', 'r', encoding='utf-8') as f:
+#     html_doc = f.read()
+
+# # Parse the HTML content
+# soup = BeautifulSoup(html_doc, 'html.parser')
+
+# # Extract the English text from the HTML content
+# english_text = soup.get_text()
+
+# # Translate the English text to Hindi
+# translator = Translator()
+# hindi_text = translator.translate(english_text, dest='hi').text
+
+# # Replace the English text with Hindi text in the HTML content
+# soup.body.string = hindi_text
+
+# # Save the translated HTML file
+# with open('trans/output.html', 'w', encoding='utf-8') as f:
+#     f.write(str(soup))
+
+####################################################################################################################
+
+# import requests
+# from bs4 import BeautifulSoup
+# from googletrans import Translator
+
+# # Set the URL of the English webpage to translate
+# # url = 'https://www.example.com'
+
+# # Send a GET request to the URL
+# # response = requests.get(url)
+
+# # Load the HTML file
+# with open('trans/page2.html', 'r', encoding='utf-8') as f:
+#     html_doc = f.read()
+
+# # Create a BeautifulSoup object with the response content
+# soup = BeautifulSoup(html_doc, 'html.parser')
+
+# # Translate the title of the webpage to Hindi
+# translator = Translator()
+# hindi_title = translator.translate(soup.title.string, dest='hi').text
+# soup.title.string.replace(soup.title.string, hindi_title)
+
+# # Translate all text in the HTML content to Hindi
+# for tag in soup.find_all(True):
+#     if tag.name not in ['script', 'style']:
+#         translated_text = translator.translate(tag.text, dest='hi').text
+#         tag.text.replace(tag.text, translated_text)
+
+# # Create a new HTML file with the translated content
+# with open('trans/translated_page.html', 'w', encoding='utf-8') as f:
+#     f.write(str(soup))
+
+
+##########################################################################################################
+
+# from googletrans import Translator
+# import re
+
+# with open('trans/page2.html', 'r', encoding='utf-8') as file:
+#     html = file.read()
+
+# pattern = re.compile(r'>[^<]+<')
+# english_text = ''
+# for match in re.findall(pattern, html):
+#     english_text += match[1:-1]
+
+# translator = Translator()
+# hindi_text = translator.translate(english_text, dest='hi').text
+
+# output = re.sub(pattern, '>' + hindi_text + '<', html)
+
+# with open('trans/output.html', 'w', encoding='utf-8') as file:
+#     file.write(output)
+
+
+####################################################################################
+# from googletrans import Translator
+# from bs4 import BeautifulSoup
+
 # translator = Translator()
 
-# # Detect the language of the text
-# detected_lang = translator.detect(text).lang
+# with open('trans/page2.html', 'r', encoding='utf-8') as file:
+#     html = file.read()
 
-# # Translate the text to Hindi
-# if detected_lang != 'hi':
-#     hindi_text = translator.translate(text, src=detected_lang, dest='hi').text
-# else:
-#     hindi_text = text
+# soup = BeautifulSoup(html, 'html.parser')
 
-# #Write the page contents to a html file
-# # with open('trans/index.html','w') as file:
-# #     file.write(hindi_text)
+# for tag in soup.find_all(['p', 'div', 'span', 'h1', 'h2', 'h3', 'title']):
+#     english_text = tag.text
+#     hindi_text = translator.translate(english_text, dest='hi').text
+#     tag.string = hindi_text
 
-# with open('trans/index.html', 'w', encoding='utf-8') as f:
-#     f.write('<html>\n<head>\n<meta charset="utf-8">\n<title>Python (प्रोग्रामिंग भाषा)</title>\n</head>\n<body>\n')
-#     f.write(hindi_text)
-#     f.write('\n</body>\n</html>')
+# with open('trans/output.html', 'w', encoding='utf-8') as file:
+#     file.write(str(soup))
 
-# # # Initialize the Translator object
-# # translator = Translator()
 
-# # # Define the input text to translate
-# # text = 'Hello, world!'
+############################################################################################################
+# from bs4 import BeautifulSoup
+# from googletrans import Translator
+# import os
 
-# # # Check if the input text is valid
-# # if text and text.strip():
-# #     # Detect the language of the input text
-# #     detected_lang = translator.detect(text).lang
+# def translate_text(text):
+#     translator = Translator()
+#     result = translator.translate(text, src='en', dest='hi')
+#     return result.text
 
-# #     # Translate the text to Hindi
-# #     if detected_lang != 'hi':
-# #         hindi_text = translator.translate(text, src=detected_lang, dest='hi').text
-# #     else:
-# #         hindi_text = text
 
-# #     # Print the translated text
-# #     print(hindi_text)
-# # else:
-# #     print("Input text is not valid.")
+# def translate_html_file(file_path):
+#     # Open the HTML file
+#     with open(file_path, 'r', encoding='utf-8') as f:
+#         html = f.read()
 
-from googletrans import Translator
-import requests
+#     # Parse the HTML using BeautifulSoup
+#     soup = BeautifulSoup(html, 'html.parser')
+
+#     # Find all text elements and translate them
+#     for element in soup.find_all(text=True):
+#         # Only translate text that is not already in Hindi
+#         if not element.parent.name in ['style', 'script'] and not element.strip().startswith('<'):
+#             translated_text = translate_text(element.strip())
+#             element.replace_with(translated_text)
+
+#     # Save the translated HTML to a new file
+#     translated_html = str(soup)
+#     translated_file_path = os.path.splitext(file_path)[0] + '_hi.html'
+#     with open(translated_file_path, 'w', encoding='utf-8') as f:
+#         f.write(translated_html)
+
+
+# folder_path = r'C:\Users\KK\Dropbox\Dev\Projects\python\hindi\trans'
+# for file_name in os.listdir(folder_path):
+#     if file_name.endswith('.html'):
+#         file_path = os.path.join(folder_path, file_name)
+#         translate_html_file(file_path)
+
+################################################################################################################################
+
 from bs4 import BeautifulSoup
+from googletrans import Translator
 
-# Set the URL of the webpage to translate
-url = "https://en.wikipedia.org/wiki/Main_Page"
-
-# Send a GET request to the URL and store the response in a variable
-response = requests.get(url)
-
-# Parse the HTML content of the response using BeautifulSoup
-soup = BeautifulSoup(response.content, "html.parser")
-
-# Find all the text content in the HTML using the "find_all" method
-text_content = soup.find_all(text=True)
-
-# Join the text content into a single string with newlines between each piece of content
-text = "\n".join(text_content)
-
-# Initialize the translator
 translator = Translator()
 
-# Translate the text to Hindi
-translation = translator.translate(text, dest="hi")
+with open("trans/index2.html", "r", encoding='utf-8') as file:
+    html_content = file.read()
 
-# Create a new HTML file with the translated content
-with open('trans/translated.html', 'w', encoding="utf-8") as f:
-    f.write(translation.text)
+# Parse the HTML using BeautifulSoup
+soup = BeautifulSoup(html_content, "html.parser")
+
+# Find all the links in the HTML
+content = soup.find_all(['p', 'div', 'span', 'h1', 'h2', 'h3', 'title'])
+# content = soup.find_all()
+
+for sentence in content:
+    if sentence.string is not None:
+        translation = translator.translate(sentence.text, dest='hi').text
+
+        sentence.string = translation   
+
+        with open("trans/output.html", "w", encoding='utf-8') as file:
+            file.write(str(soup))
+
+
 

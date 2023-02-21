@@ -35,7 +35,7 @@ scraper = cfscrape.create_scraper(delay=20)
 info = scraper.get(URL, headers={'User-Agent': random.choice(user_agents_list)})
 
 #Write the page contents to a html file
-with open('trans/index.html','w') as file:
+with open('scrap/index.html','w') as file:
     # file.write(page.text)
     file.write(info.text)
 
@@ -93,16 +93,33 @@ for link in links:
         pagelink[link_url_base] = link_ref
 
         # Create a new HTML page in Hindi
-        with open('trans/' + clean_text + str(linkcount) + '.html', 'w', encoding='utf-8') as f:     
+        with open('scrap/' + clean_text + str(linkcount) + '.html', 'w', encoding='utf-8') as f:     
             # print(f"Writing {linkcount} ....")           
             f.write(response.text)    
             # print(f"DONE Writing {linkcount}....")
+
+        with open('scrap/' + clean_text + str(linkcount) + '.html', "r", encoding='utf-8') as file:
+            html_content = file.read()
+
+        # Parse the HTML using BeautifulSoup
+        soup = BeautifulSoup(html_content, "html.parser")
+
+        # Find all the links in the HTML
+        imgs = soup.find_all("img")
+
+        for img in imgs:
+            if img.has_attr('data-src') and img.has_attr('src'):
+                img['src'] = img['data-src']
+
+        with open('scrap/' + clean_text + str(linkcount) + '.html', "w", encoding='utf-8') as file:
+            file.write(str(soup))
         
         linkcount += 1
-        time.sleep(3)
+        time.sleep(2)
 
 # Load the index.html file to edit the links file
-with open("scrap/index.html", "r") as file:
+# with open("scrap/index.html", "r") as file:
+with open("scrap/main.html", "r") as file:
     html_content = file.read()
 
 # Parse the HTML using BeautifulSoup
@@ -126,9 +143,9 @@ for link in links:
     with open("scrap/index2.html", "w") as file:
         file.write(str(soup))
 
-for img in imgs:
-    if img.has_attr('data-src') and img.has_attr('src'):
-        img['src'] = img['data-src']
+# for img in imgs:
+#     if img.has_attr('data-src') and img.has_attr('src'):
+#         img['src'] = img['data-src']
 
-    with open("scrap/index2.html", "w") as file:
-        file.write(str(soup))
+#     with open("scrap/index2.html", "w") as file:
+#         file.write(str(soup))
